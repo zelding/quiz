@@ -1,0 +1,65 @@
+{
+  "$id": "questions.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A kérdések fájl struktúráját leíró fájl",
+  "$defs": {
+    "question_list": {
+      "$anchor": "",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "text", "answer"],
+        "properties": {
+          "type": {"type": "string"},
+          "text": {"type": {"oneOf": ["string", "integer", "float"]}},
+          "answer": {"type": "string"},
+          "tolerance": {"$ref": "#tolerance"},
+          "regex": {"type": "string"},
+          "answers": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "array", "items": "string"
+                },
+                {
+                  "type": "object",
+                  "required": ["regex"],
+                  "properties": {
+                    "regex": {"type": "string"},
+                    "score": {"type": "string"}
+                  },
+                  "defaults": {"score": "default"}
+                },
+                {
+                  "type": "object",
+                  "required": ["answer"],
+                  "properties": {
+                    "answer": {
+                      "type": {
+                        "oneOf": ["string", "integer", "float"]
+                      }
+                    },
+                    "score": {"type": "string"}
+                  },
+                  "defaults": {"score": "default"},
+                  "tolerance": {"$ref": "#tolerance" }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "tolerance": {
+      "$anchor": "tolerance",
+      "type": "object",
+      "required": {"oneOf":  ["percent", "decimal", "const"]},
+      "properties": {
+        "percent": {"type": "integer"},
+        "decimal": {"type": "integer"},
+        "const": {"type": "integer"}
+      }
+    }
+  }
+}

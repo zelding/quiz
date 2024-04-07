@@ -28,12 +28,12 @@ class QuestionCollection:
 		return question
 
 	def create_question(self, question_data) -> Question:
-		if 'SzövegesKérdés' == question_data['type']:
+		if 'text' == question_data['type']:
 			return qt.RegexQuestion(question_data['text'], question_data['answer'], question_data['regex'])
 
 		answers = self.create_answers(question_data)
 
-		if 'SzámKérdés' == question_data['type']:
+		if 'number' == question_data['type']:
 			return qt.IntQuestion(question_data['text'], question_data['answer'], answers)
 		if 'float' == question_data['type']:
 			return qt.FloatQuestion(question_data['text'], question_data['answer'], answers)
@@ -48,7 +48,6 @@ class QuestionCollection:
 
 	def create_answers(self, question_data) -> list[Answer]:
 		answers = []
-		tt = ''
 		if question_data['tolerance']:
 			tt = self.get_tolerance_type(question_data)
 			answers.append(Tolerant(

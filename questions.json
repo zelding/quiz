@@ -1,65 +1,152 @@
-{
-  "$id": "questions.schema.json",
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "A kérdések fájl struktúráját leíró fájl",
-  "$defs": {
-    "question_list": {
-      "$anchor": "",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["type", "text", "answer"],
-        "properties": {
-          "type": {"type": "string"},
-          "text": {"type": {"oneOf": ["string", "integer", "float"]}},
-          "answer": {"type": "string"},
-          "tolerance": {"$ref": "#tolerance"},
-          "regex": {"type": "string"},
-          "answers": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "array", "items": "string"
-                },
-                {
-                  "type": "object",
-                  "required": ["regex"],
-                  "properties": {
-                    "regex": {"type": "string"},
-                    "score": {"type": "string"}
-                  },
-                  "defaults": {"score": "default"}
-                },
-                {
-                  "type": "object",
-                  "required": ["answer"],
-                  "properties": {
-                    "answer": {
-                      "type": {
-                        "oneOf": ["string", "integer", "float"]
-                      }
-                    },
-                    "score": {"type": "string"}
-                  },
-                  "defaults": {"score": "default"},
-                  "tolerance": {"$ref": "#tolerance" }
-                }
-              ]
-            }
-          }
+[
+  {
+    "type": "text",
+    "text": "Melyik a föld legnagyobb területű kontinense?",
+    "answer": "Ázsia",
+    "regex": "[AaÁá]z?sia"
+  },
+  {
+    "type": "text",
+    "text": "Melyik a föld legnagyobb területű országa?",
+    "answer": "Oroszország",
+    "regex": "[Oo]rosz(ország)?"
+  },
+  {
+    "type": "bool",
+    "text": "Nem?!",
+    "answer": "De!",
+    "answers": [
+      [
+        "de",
+        "De",
+        "DE"
+      ],
+      {
+        "regex": "de[!?]*"
+      }
+    ]
+  },
+  {
+    "type": "number",
+    "text": "14X + 36X = 200 x=?",
+    "answer": "4",
+    "tolerance": {
+      "percent": 20,
+      "score": "low"
+    }
+  },
+  {
+    "type": "number",
+    "text": "2 + 3 * 4 + 6 / 2 = x x=?",
+    "answer": "17",
+    "tolerance": {
+      "const": 3,
+      "score": "low"
+    }
+  },
+  {
+    "type": "FloatKérdés",
+    "text": "A π első 6+ számjegye?",
+    "answer": "314 159 265 359",
+    "answers": [
+      {
+        "answer": 3.14159,
+        "tolerance": {
+          "decimal": 5,
+          "score": "default"
+        }
+      },
+      {
+        "answer": 31459,
+        "tolerance": {
+          "decimal": -5,
+          "score": "default"
+        }
+      },
+      {
+        "answer": 3.14,
+        "score": "low",
+        "tolerance": {
+          "decimal": 1,
+          "score": "low"
+        }
+      },
+      {
+        "answer": 314,
+        "score": "low",
+        "tolerance": {
+          "decimal": -1,
+          "score": "low"
+        }
+      },
+      {
+        "regex": "3[\\s.]*14\\s?159\\s?265\\s?359",
+        "score": "high"
+      }
+    ]
+  },
+  {
+    "type": "float",
+    "text": "A gravitációs állandó meghatározásának képletében mekkora tolarenciával számolnak?",
+    "answer": "15 százezred",
+    "answers": [
+      {
+        "answer": 0.00015,
+        "score": "high",
+        "tolerance": {
+          "decimal": 5
+        }
+      },
+      {
+        "answer": 0.00015,
+        "score": "low",
+        "tolerance": {
+          "decimal": 3
+        }
+      },
+      {
+        "answer": 0.00015,
+        "score": "default",
+        "tolerance": {
+          "percent": false
         }
       }
-    },
+    ]
+  },
+  {
+    "type": "date_strict",
+    "text": "Mikor született Nikola Tesla?",
+    "answer": "1856-07-10",
     "tolerance": {
-      "$anchor": "tolerance",
-      "type": "object",
-      "required": {"oneOf":  ["percent", "decimal", "const"]},
-      "properties": {
-        "percent": {"type": "integer"},
-        "decimal": {"type": "integer"},
-        "const": {"type": "integer"}
-      }
+      "const": 14
     }
+  },
+  {
+    "type": "date",
+    "text": "Mikor indították az első sikeres magánfinanszírozású rakétát? (Falcon-1)",
+    "answer": "2008 szeptember 28",
+    "answers": [
+      {
+        "answer": "2008-09-28",
+        "score": "high",
+        "tolerance": {
+          "const": 14,
+          "score": "default"
+        }
+      },
+      {
+        "answer": "2008",
+        "score": "default",
+        "tolerance": {
+          "const": 2,
+          "score": "low"
+        }
+      }
+    ]
   }
-}
+]
+
+
+
+
+

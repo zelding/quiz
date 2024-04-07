@@ -1,0 +1,36 @@
+## @see https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#a-full-example
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quiz"
+version = "2024.0.4"
+requires-python = ">= 3.10"
+authors = [{name="zedling"}]
+maintainers = [{name="zedling"}]
+description = "Example Quiz program, based on a firends exam"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {text = "MIT License"}
+keywords = ["sample", "example", "inheritence", "school", "docker", "io", "console"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Students",
+  "Topic :: Software Development :: Inheritence",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10+",
+]
+dependencies = [
+]
+
+[project.urls]
+Homepage = "https://github.com/zelding/quiz"
+Documentation = "https://github.com/zelding/quiz/wiki"
+Repository = "https://github.com/zelding/quiz.git"
+Issues = "https://github.com/zelding/quiz/issues"
+Changelog = "https://github.com/zelding/quiz/blob/main/CHANGELOG.md"
+
+## @see https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#creating-executable-scripts
+[project.scripts]
+# equivalent of `from spam import main_cli; main_cli()`
+spam-cli = "main:main_cli"
