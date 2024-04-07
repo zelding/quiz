@@ -3,6 +3,35 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "A kérdések fájl struktúráját leíró fájl",
   "$defs": {
+    "tolerance": {
+      "$anchor": "tolerance",
+      "type": "object",
+      "patternProperties": {
+        "^(percent|decimal|const)$": {}
+      },
+      "additionalProperties": false,
+      "properties": {
+        "percent": {"type": "integer"},
+        "decimal": {"type": "integer"},
+        "const": {"type": "integer"}
+      }
+    },
+    "answer": {
+      "$anchor": "answer",
+      "type": "object",
+      "required": ["answer"],
+      "additionalProperties": false,
+      "properties": {
+        "answer": {
+          "type": {
+            "oneOf": ["string", "integer", "float"]
+          }
+        },
+        "score": {"type": "string"}
+      },
+      "defaults": {"score": "default"},
+      "tolerance": {"$ref": "#/$defs/tolerance" }
+    },
     "question_list": {
       "$anchor": "",
       "type": "array",
@@ -13,7 +42,7 @@
           "type": {"type": "string"},
           "text": {"type": {"oneOf": ["string", "integer", "float"]}},
           "answer": {"type": "string"},
-          "tolerance": {"$ref": "#tolerance"},
+          "tolerance": {"$ref": "#/$defs/tolerance"},
           "regex": {"type": "string"},
           "answers": {
             "type": "array",
@@ -32,33 +61,14 @@
                   "defaults": {"score": "default"}
                 },
                 {
-                  "type": "object",
-                  "required": ["answer"],
-                  "properties": {
-                    "answer": {
-                      "type": {
-                        "oneOf": ["string", "integer", "float"]
-                      }
-                    },
-                    "score": {"type": "string"}
-                  },
-                  "defaults": {"score": "default"},
-                  "tolerance": {"$ref": "#tolerance" }
+                  "type": {
+                    "$ref": "#/$defs/answer"
+                  }
                 }
               ]
             }
           }
         }
-      }
-    },
-    "tolerance": {
-      "$anchor": "tolerance",
-      "type": "object",
-      "required": {"oneOf":  ["percent", "decimal", "const"]},
-      "properties": {
-        "percent": {"type": "integer"},
-        "decimal": {"type": "integer"},
-        "const": {"type": "integer"}
       }
     }
   }
