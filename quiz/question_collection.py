@@ -1,4 +1,5 @@
-from quiz.question import Question
+from quiz.answer_collection import AnswerCollection
+from quiz.question import Question, Hint
 from quiz.answer import Answer, Tolerant
 from quiz.tolerance import Tolerance, DecimalTolerance, PercentageTolerance, ConstTolerance
 import quiz.question_types as qt
@@ -28,32 +29,38 @@ class QuestionCollection:
 		return question
 
 	def create_question(self, question_data) -> Question:
+		q = None
 		if 'text' == question_data['type']:
-			return qt.RegexQuestion(question_data['text'], question_data['answer'], question_data['regex'])
+			q = qt.RegexQuestion(question_data['text'], question_data['answer'], question_data['regex'])
 
 		answers = self.create_answers(question_data)
 
 		if 'number' == question_data['type']:
-			return qt.IntQuestion(question_data['text'], question_data['answer'], answers)
+			q = qt.IntQuestion(question_data['text'], question_data['answer'], answers)
 		if 'float' == question_data['type']:
-			return qt.FloatQuestion(question_data['text'], question_data['answer'], answers)
+			q = qt.FloatQuestion(question_data['text'], question_data['answer'], answers)
 		if 'date' == question_data['type']:
-			return qt.DateQuestion(question_data['text'], question_data['answer'], answers)
+			q = qt.DateQuestion(question_data['text'], question_data['answer'], answers)
 		if 'date_strict' == question_data['type']:
-			return qt.DateQuestion(question_data['text'], question_data['answer'], answers)
+			q = qt.DateQuestion(question_data['text'], question_data['answer'], answers)
 		if 'bool' == question_data['type']:
-			return qt.BoolQuestion(question_data['text'], question_data['answer'], answers)
+			q = qt.BoolQuestion(question_data['text'], question_data['answer'], answers)
 
-		return qt.FloatQuestion("asd", 6.7)
+		# q = qt.FloatQuestion("asd", 6.7)
 
-	def create_answers(self, question_data) -> list[Answer]:
-		answers = []
+		if question_data.get('hint'):
+			q.set_hint(Hint(question_data['hint']))
+
+		return q
+
+	def create_answers(self, question_data) -> AnswerCollection:
+		answer_data = {}
 
 		print(question_data)
 
 		if question_data.get('tolerance'):
 			tt = self.get_tolerance_type(question_data)
-			answers.append(Tolerant(
+			answer_data. .(Tolerant(
 				question_data['text'],
 				question_data['answer'],
 				self.create_tolerance(question_data, question_data, tt)
@@ -80,16 +87,19 @@ class QuestionCollection:
 								answer_data['answer'],
 								tolerance
 							))
-		return answers
+		return AnswerCollection(answer_data)
 
 	def create_tolerance(self, answer_data, question_data, tt):
 		tolerance = None
+
+		score = answer_data.get('score', 'low')
+
 		if tt == 'decimal':
-			tolerance = DecimalTolerance(question_data['text'], answer_data['tolerance']['decimal'])
+			tolerance = DecimalTolerance(question_data['text'], answer_data['tolerance']['decimal'], score)
 		if tt == 'percent':
-			tolerance = PercentageTolerance(question_data['text'], answer_data['tolerance']['percent'])
+			tolerance = PercentageTolerance(question_data['text'], answer_data['tolerance']['percent'], score)
 		if tt == 'const':
-			tolerance = ConstTolerance(question_data['text'], answer_data['tolerance']['const'])
+			tolerance = ConstTolerance(question_data['text'], answer_data['tolerance']['const'], score)
 		return tolerance
 
 	def get_tolerance_type(self, data):

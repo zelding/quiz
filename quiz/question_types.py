@@ -18,12 +18,27 @@ class RegexQuestion(Question):
 
 class IntQuestion(NumberQuestion):
 	def check_value(self, user_input) -> int:
-		return int(user_input)
+		try:
+			return int(user_input)
+		except Exception as ex:
+			print('')
+			raise ex
 
 
 class FloatQuestion(NumberQuestion):
-	def check_value(self, user_input) -> float:
+	def check_value(self, user_input: str) -> float:
 		return float(user_input)
+
+	def check_answer(self, user_input: str) -> (bool, str):
+		try:
+			user_input = self.check_value(user_input)
+			if user_input == float(self.answer_text):
+				return True, ''
+			else:
+				return False, f'{self.answer_text}'
+		except Exception as wtf:
+			print(f'Hibás formátum.. A válaszod egész szám legyen! {wtf}')
+			raise AssertionError
 
 
 class DateQuestion(Question):
@@ -43,3 +58,14 @@ class DateQuestion(Question):
 class BoolQuestion(NumberQuestion):
 	def check_value(self, user_input) -> str:
 		return str(user_input).lower()
+
+	def check_answer(self, user_input) -> (bool, str):
+		try:
+			user_input = self.check_value(user_input)
+			if user_input == self.answer_text:
+				return True, ''
+			else:
+				return False, f'{self.answer_text}'
+		except Exception as wtf:
+			print(f'Hibás formátum.. A válaszod egész szám legyen! {wtf}')
+			raise AssertionError

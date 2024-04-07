@@ -3,13 +3,15 @@
     "type": "text",
     "text": "Melyik a föld legnagyobb területű kontinense?",
     "answer": "Ázsia",
-    "regex": "[AaÁá]z?sia"
+    "regex": "[AaÁá]z?sia",
+    "hint": "nagy"
   },
   {
     "type": "text",
     "text": "Melyik a föld legnagyobb területű országa?",
     "answer": "Oroszország",
-    "regex": "[Oo]rosz(ország)?"
+    "regex": "[Oo]rosz(ország)?",
+    "hint": "nagy"
   },
   {
     "type": "bool",
@@ -45,7 +47,7 @@
     }
   },
   {
-    "type": "FloatKérdés",
+    "type": "float",
     "text": "A π első 6+ számjegye?",
     "answer": "314 159 265 359",
     "answers": [

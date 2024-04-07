@@ -2,9 +2,10 @@ from abc import ABC, abstractmethod
 
 
 class Tolerance(ABC):
-	def __init__(self, answer, threshold: int):
+	def __init__(self, answer, threshold: int, score: str = 'low'):
 		self.answer = answer
 		self.threshold = threshold
+		self.score = score
 
 	def __call__(self, user_input):
 		return self.check(user_input)
