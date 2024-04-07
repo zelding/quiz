@@ -14,19 +14,19 @@ class Answer(ABC):
 		self.answer = answer
 		self._score = os.environ["SCORE_LOW"]
 
+	@abstractmethod
 	def check(self, user_input) -> int:
-		user_input = str.strip(user_input)
 		user_input = self.convert_input(user_input)
 		if user_input == self.answer:
 			return True
 		return False
 
 	def __call__(self, *args, **kwargs):
-		pass
+		return self.check(*args)
 
 	@abstractmethod
 	def convert_input(self, user_input):
-		pass
+		return str.strip(user_input)
 
 	@score.setter
 	def score(self, value: str):
@@ -43,6 +43,16 @@ class Tolerant(Answer, ABC):
 			return True
 
 		if self.tolerance is Tolerance:
-			return self.tolerance(user_input)
+			return self.tolerance.check(user_input)
 
 		return False
+
+	def convert_input(self, user_input) -> int:
+		user_input = super().convert_input(user_input)
+		return int(user_input)
+
+
+class Hinted:
+	def __init__(self, text: str):
+		self.text = text
+

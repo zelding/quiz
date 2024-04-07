@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from quiz.answer import Answer
+from quiz.answer import Answer, Hinted
 import os
 
 
@@ -22,7 +22,9 @@ class Question(ABC):
 				is_right = ans.check(user_input)
 				if is_right:
 					self.score = ans.score
-				hint = ans.get_hint(user_input)
+
+				if ans is Hinted:
+					hint = ans.get_hint(user_input)
 
 			if is_right:
 				print('A válasz helyes!')

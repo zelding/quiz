@@ -2,8 +2,20 @@
 # a kérdéseket json fájlból olvassa be
 # ABCD kérdéstípust berakni
 
-from quiz.question_collection import QuestionCollection
 import json
+import os
+from quiz.question_collection import QuestionCollection
+
+
+def score(level: str) -> int:
+	match level:
+		case "low":
+			return int(os.environ["SCORE_LOW"])
+		case "default":
+			return int(os.environ["SCORE_DEFAULT"])
+		case "high":
+			return int(os.environ["SCORE_HIGH"])
+	return 0
 
 
 '''
@@ -28,14 +40,13 @@ for question in QuestionCollection(questions_json):
 	no_q += 1
 	if question.ask():
 		hits += 1
-		points += question.score()
+		points += score(question.score())
 		results.append(question.score())
 
 print(f'\nJátékos neve: {player_name}')
 print(f'A helyes válaszok száma {hits} / {no_q} ')
 print(f'Pontszám: {points} / {no_q} pont.')
 print(f'Eredmény: {100 * points / no_q:.3g} %')
-
 
 with open('solution.json', 'a', encoding='UTF-8') as result_file:
 	json.dump(results, result_file, indent=4)

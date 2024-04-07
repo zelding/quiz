@@ -48,7 +48,10 @@ class QuestionCollection:
 
 	def create_answers(self, question_data) -> list[Answer]:
 		answers = []
-		if question_data['tolerance']:
+
+		print(question_data)
+
+		if question_data.get('tolerance'):
 			tt = self.get_tolerance_type(question_data)
 			answers.append(Tolerant(
 				question_data['text'],
@@ -57,7 +60,7 @@ class QuestionCollection:
 			))
 			return answers
 
-		if question_data['answers']:
+		if question_data.get('answers'):
 			for answer_data in question_data['answers']:
 				if answer_data is list:
 					for ans in answer_data:
@@ -91,10 +94,11 @@ class QuestionCollection:
 
 	def get_tolerance_type(self, data):
 		tt = ''
-		if data['tolerance']['const']:
-			tt = 'const'
-		if data['tolerance']['percent']:
-			tt = 'percent'
-		if data['tolerance']['decimal']:
-			tt = 'decimal'
+		if data.get('tolerance'):
+			if data['tolerance'].get('const'):
+				tt = 'const'
+			if data['tolerance'].get('percent'):
+				tt = 'percent'
+			if data['tolerance'].get('decimal'):
+				tt = 'decimal'
 		return tt
